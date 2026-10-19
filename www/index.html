@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap">
 <style>
 /* Layout: procedural world full-bleed (Codex motion studies), centred hero with a glass play pill,
-   segmented tabs + thumbnail cards docked at the bottom. Phone first. */
+   translucent category switcher on top, the content itself swipes between tracks. Phone first. */
 :root{
   --bg:#060c11;
   --ink:#edf0ea;
@@ -39,7 +39,7 @@ svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.3;fill:none;flex:n
 .grain{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.07;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.91' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.5' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-.app{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;grid-template-columns:minmax(0,1fr);
+.app{position:relative;height:100%;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);
   padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 
 header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 20px 8px}
@@ -54,7 +54,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
 .icon-button.square{width:36px;padding:0}
 .timer-left{font-variant-numeric:tabular-nums;color:var(--quiet)}
 
-.hero{display:grid;place-content:center;justify-items:center;text-align:center;padding:12px 20px 18px;touch-action:pan-y}
+.hero{display:grid;place-content:center;justify-items:center;text-align:center;padding:12px 20px 18px;touch-action:pan-y;overflow:hidden}
 .eyebrow{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#b4c3bd;margin:0 0 18px;display:flex;gap:12px;align-items:center}
 .eyebrow::before,.eyebrow::after{content:"";width:22px;height:1px;background:#bacdc13d}
 h1{font-weight:200;font-size:clamp(44px,13cqw,80px);letter-spacing:-.065em;line-height:1.05;margin:0 0 12px;text-shadow:0 2px 30px #050a0c60;text-wrap:balance;max-width:11ch}
@@ -80,24 +80,22 @@ h1{font-weight:200;font-size:clamp(44px,13cqw,80px);letter-spacing:-.065em;line-
 .bars i:nth-child(2){animation-delay:-.35s}.bars i:nth-child(3){animation-delay:-.75s}
 @keyframes eq{0%,100%{height:3px}50%{height:12px}}
 
-.collection{display:grid;gap:14px;min-width:0}
-.tabs{display:flex;gap:2px;margin:0 18px;padding:4px;border:1px solid #ccddd51a;border-radius:30px;background:#030b102e;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
-.tab{flex:1;border-radius:24px;padding:9px 4px;color:#92a3a4;font-size:11px;white-space:nowrap;transition:color .2s,background .2s}
-.tab[aria-selected="true"]{background:#d5e5db14;color:#e2ebe5;box-shadow:inset 0 0 0 1px #d3e4d71a}
-.cards{display:flex;gap:10px;overflow-x:auto;padding:2px 18px 4px;scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-inline:18px}
-.cards::-webkit-scrollbar{display:none}
-.card{position:relative;flex:0 0 138px;height:104px;border:1px solid #c5dfd51c;overflow:hidden;border-radius:12px;background:#091218;text-align:left;
-  scroll-snap-align:start;transition:border-color .2s,transform .12s}
-.card:active{transform:scale(.97)}
-.card[aria-pressed="true"]{border-color:#b5d4bc8c;box-shadow:0 0 0 1px #b5d4bc16}
-.thumb{position:absolute;inset:0;opacity:.92;pointer-events:none}
-.card::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#040c12f2,#040c1210 85%)}
-.card-title{position:absolute;bottom:25px;left:12px;right:8px;z-index:1;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-meta{position:absolute;bottom:10px;left:12px;right:8px;z-index:1;font-size:9px;color:#8ca39d;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dot{position:absolute;top:10px;right:10px;width:5px;height:5px;border-radius:50%;background:#d1e5c9;box-shadow:0 0 10px #b7d3af77;z-index:2;opacity:0}
-.card[aria-pressed="true"] .dot{opacity:1}
-.playing-card .dot{animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.35}}
+/* category switcher: translucent segmented control with a sliding glass pill */
+.tabs{position:relative;display:flex;margin:6px 18px 0;padding:4px;border:1px solid #ccddd51a;border-radius:30px;
+  background:rgba(3,11,16,.22);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);touch-action:pan-y}
+.glider{position:absolute;top:4px;bottom:4px;left:0;width:0;border-radius:24px;pointer-events:none;
+  background:linear-gradient(120deg,rgba(220,235,224,.13),rgba(198,227,219,.05));box-shadow:inset 0 0 0 1px rgba(211,228,215,.14),0 4px 18px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);transition:transform .55s cubic-bezier(.22,.8,.2,1),width .55s cubic-bezier(.22,.8,.2,1)}
+.tabs.dragging .glider{transition:none}
+.tab{position:relative;z-index:1;flex:1;border-radius:24px;padding:9px 4px;color:rgba(200,214,212,.55);font-size:11px;white-space:nowrap;transition:color .45s ease,opacity .45s ease}
+.tab[aria-selected="true"]{color:#e8efea}
+
+/* track carousel: the content itself slides */
+.slide{display:grid;justify-items:center;will-change:transform,opacity}
+.slide.anim{transition:transform .34s cubic-bezier(.3,.7,.3,1),opacity .34s ease}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:18px;height:4px}
+.dots i{display:block;width:4px;height:4px;border-radius:2px;background:rgba(214,228,220,.28);transition:width .45s cubic-bezier(.22,.8,.2,1),background .45s}
+.dots i.on{width:16px;background:rgba(232,240,234,.85)}
 
 footer{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;padding:12px 20px 0;color:var(--dim);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase}
 
@@ -110,17 +108,16 @@ footer{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;pa
 
 @container stage (min-width:700px){
   header{padding:30px 40px 8px}
-  .tabs{align-self:center;justify-self:center;width:min(520px,calc(100% - 80px));margin:0}
-  .cards{padding-inline:40px;scroll-padding-inline:40px;justify-content:safe center}
-  .card{flex-basis:160px;height:116px}
+  .tabs{justify-self:center;width:min(520px,calc(100% - 80px));margin-inline:0}
   footer{padding-inline:42px}
   .description{font-size:14.5px}
 }
 @container stage (max-height:640px){
-  h1{font-size:44px}.eyebrow{margin-bottom:10px}.hint{margin-top:16px}.card{height:88px}.meta{display:none}
+  h1{font-size:44px}.eyebrow{margin-bottom:10px}.hint{margin-top:16px}.meta{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .swap,.ui{transition:none}.playing .bars i,.playing-card .dot,.hint,.tap-ring{animation:none}
+  .swap,.ui{transition:none}.playing .bars i,.hint,.tap-ring{animation:none}
+  .slide.anim,.glider,.dots i{transition:none}
 }
 </style>
 </head>
@@ -141,20 +138,20 @@ footer{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;pa
       </div>
     </header>
 
+    <nav class="tabs ui" role="tablist" id="tabs" aria-label="Sound categories"><span class="glider" id="glider" aria-hidden="true"></span></nav>
+
     <section class="hero ui" id="hero" role="button" tabindex="0" aria-label="Play" aria-describedby="title">
-      <p class="eyebrow swap" id="eyebrow">A little room to breathe</p>
-      <h1 class="swap" id="title">Stress relief</h1>
-      <p class="description swap" id="description">Let the weight fall away</p>
-      <p class="meta swap" id="meta">432 Hz tuning · one swell every 10 s</p>
+      <div class="slide" id="slide">
+        <p class="eyebrow" id="eyebrow">A little room to breathe</p>
+        <h1 id="title">Stress relief</h1>
+        <p class="description" id="description">Let the weight fall away</p>
+        <p class="meta" id="meta">432 Hz tuning · one swell every 10 s</p>
+      </div>
       <p class="hint" id="hint"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="hintText">Tap to listen</span></p>
+      <div class="dots" id="dots" aria-hidden="true"></div>
     </section>
 
-    <section class="collection ui" aria-label="Choose a sound">
-      <div class="tabs" role="tablist" id="tabs"></div>
-      <div class="cards" id="cards" role="tabpanel"></div>
-    </section>
-
-    <footer class="ui"><span>33 worlds. One quiet place.</span><span>Headphones for binaural</span></footer>
+    <footer class="ui"><span id="counter">01 / 11</span><span>Swipe to explore · Headphones for binaural</span></footer>
   </div>
   <div class="clean-tap" id="cleanTap" aria-hidden="true"></div>
   <button class="icon-button restore" id="restore" type="button" aria-label="Show interface">
@@ -421,56 +418,83 @@ const INTRO={moods:'A little room to breathe',binaural:'A quieter state of mind'
 const BG_ALIAS={relaxation:'deep-relaxation',lofi:'lo-fi-chill',spa:'spa-yoga',morning:'gentle-morning','forest-night':'forest'};
 const bgId=i=>BG_ALIAS[i.id]||(i.kind==='tone'?'hz-'+i.f:i.id);
 const BGP=Object.fromEntries(StillroomBackgrounds.presets.map(p=>[p.id,p]));
-let current=ITEMS[0],group='moods',thumbs=[],clean=false;
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const inGroup=g=>ITEMS.filter(i=>i.g===g);
+const lastInGroup={};GROUPS.forEach(g=>lastInGroup[g.id]=inGroup(g.id)[0]);
+let current=ITEMS[0],clean=false;
 const engine=StillroomBackgrounds.mount($('world'),{preset:bgId(current),maxDpr:1.5,transitionDuration:1800,frozen:true});
 
-function renderTabs(){
-  $('tabs').replaceChildren();
-  GROUPS.forEach(g=>{const b=document.createElement('button');b.className='tab';b.type='button';b.setAttribute('role','tab');b.textContent=g.label;
-    b.setAttribute('aria-selected',g.id===group);b.onclick=()=>{if(group===g.id)return;group=g.id;renderTabs();renderCards(true)};$('tabs').appendChild(b)});
+/* ---- category switcher (top) ---- */
+GROUPS.forEach(g=>{const b=document.createElement('button');b.className='tab';b.type='button';b.dataset.g=g.id;
+  b.setAttribute('role','tab');b.textContent=g.label;b.onclick=()=>{if(tabDrag.suppress){tabDrag.suppress=false;return}goGroup(g.id)};$('tabs').appendChild(b)});
+function placeGlider(offset=0){
+  const on=$('tabs').querySelector(`.tab[data-g="${current.g}"]`);if(!on)return;
+  $('glider').style.width=on.offsetWidth+'px';$('glider').style.transform=`translateX(${on.offsetLeft+offset}px)`;
+  $('tabs').querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b===on));
 }
-function renderCards(fromTab){
-  thumbs.forEach(t=>t.destroy());thumbs=[];const box=$('cards');box.replaceChildren();
-  ITEMS.filter(i=>i.g===group).forEach(i=>{
-    const b=document.createElement('button');b.className='card';b.type='button';b.dataset.id=i.id;
-    b.setAttribute('aria-pressed',i===current);b.setAttribute('aria-label',i.name+', '+i.chip);
-    const th=document.createElement('span');th.className='thumb';th.setAttribute('aria-hidden','true');
-    const t=document.createElement('span');t.className='card-title';t.textContent=i.name;
-    const m=document.createElement('span');m.className='card-meta';m.textContent=i.chip;
-    const d=document.createElement('span');d.className='dot';
-    b.append(th,t,m,d);b.onclick=()=>{select(i);if(!playing)play()};box.appendChild(b);
-    thumbs.push(StillroomBackgrounds.mount(th,{preset:bgId(i),reducedMotion:true,maxDpr:1}));
-  });
-  markCards();
-  const on=box.querySelector('[aria-pressed="true"]');
-  if(on)box.scrollTo({left:Math.max(0,on.offsetLeft-box.clientWidth/2+on.clientWidth/2),behavior:fromTab?'smooth':'auto'});else box.scrollTo({left:0,behavior:fromTab?'smooth':'auto'});
+function goGroup(gid,dir){
+  if(gid===current.g)return;
+  const gi=GROUPS.findIndex(g=>g.id===gid),ci=GROUPS.findIndex(g=>g.id===current.g);
+  select(lastInGroup[gid],dir||(gi>ci?1:-1));
 }
-function markCards(){
-  $('cards').querySelectorAll('.card').forEach(b=>{const on=b.dataset.id===current.id;b.setAttribute('aria-pressed',on);b.classList.toggle('playing-card',on&&playing)});
+function stepGroup(d){const ci=GROUPS.findIndex(g=>g.id===current.g);goGroup(GROUPS[(ci+d+GROUPS.length)%GROUPS.length].id,d)}
+const tabDrag={x:0,y:0,on:false,moved:false,suppress:false};
+$('tabs').addEventListener('pointerdown',e=>{Object.assign(tabDrag,{x:e.clientX,y:e.clientY,on:true,moved:false})});
+$('tabs').addEventListener('pointermove',e=>{if(!tabDrag.on)return;const dx=e.clientX-tabDrag.x,dy=e.clientY-tabDrag.y;
+  if(!tabDrag.moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){tabDrag.moved=true;$('tabs').classList.add('dragging');try{$('tabs').setPointerCapture(e.pointerId)}catch(_){}}
+  if(tabDrag.moved)placeGlider(Math.max(-60,Math.min(60,-dx*.35)))});
+function endTabDrag(e){if(!tabDrag.on)return;tabDrag.on=false;$('tabs').classList.remove('dragging');
+  if(tabDrag.moved){tabDrag.suppress=true;setTimeout(()=>tabDrag.suppress=false,50);const dx=e.clientX-tabDrag.x;if(Math.abs(dx)>40)stepGroup(dx<0?1:-1);else placeGlider()}}
+$('tabs').addEventListener('pointerup',endTabDrag);$('tabs').addEventListener('pointercancel',e=>{tabDrag.on=false;$('tabs').classList.remove('dragging');placeGlider()});
+addEventListener('resize',()=>placeGlider());
+
+/* ---- content: the slide carries the track; swipe it to move through the category ---- */
+function fill(item){
+  $('eyebrow').textContent=INTRO[item.g];$('title').textContent=item.name;
+  $('description').textContent=(BGP[bgId(item)]||{}).description||item.chip;$('meta').textContent=item.meta;
+  const list=inGroup(item.g),idx=list.indexOf(item);
+  $('dots').replaceChildren(...list.map((_,k)=>{const d=document.createElement('i');if(k===idx)d.className='on';return d}));
+  $('counter').textContent=String(idx+1).padStart(2,'0')+' / '+String(list.length).padStart(2,'0');
 }
-function setText(item,instant){
-  const els=['eyebrow','title','description','meta'].map($);
-  const apply=()=>{$('eyebrow').textContent=INTRO[item.g];$('title').textContent=item.name;
-    $('description').textContent=(BGP[bgId(item)]||{}).description||item.chip;$('meta').textContent=item.meta;els.forEach(e=>e.classList.remove('out'))};
-  if(instant)return apply();els.forEach(e=>e.classList.add('out'));setTimeout(apply,280);
+let slideTimer=0;
+function slideTo(item,dir){
+  const el=$('slide');clearTimeout(slideTimer);
+  if(reduceMotion||!dir){el.className='slide';el.style.transform='';el.style.opacity='';fill(item);return}
+  el.className='slide anim';el.style.transform=`translateX(${-dir*70}px)`;el.style.opacity='0';
+  slideTimer=setTimeout(()=>{fill(item);el.className='slide';el.style.transform=`translateX(${dir*70}px)`;el.style.opacity='0';
+    void el.offsetWidth;el.className='slide anim';el.style.transform='translateX(0)';el.style.opacity='1'},300);
 }
-function select(item,instant){
-  if(item===current&&!instant)return;
-  current=item;engine.setPreset(bgId(item));setText(item,instant);
-  if(group!==item.g){group=item.g;renderTabs();renderCards(false)}else{markCards();const on=$('cards').querySelector('[aria-pressed="true"]');
-    if(on&&!instant){const box=$('cards');box.scrollTo({left:Math.max(0,on.offsetLeft-box.clientWidth/2+on.clientWidth/2),behavior:'smooth'})}}
+function select(item,dir){
+  if(item===current&&dir!==0)return;
+  current=item;lastInGroup[item.g]=item;engine.setPreset(bgId(item));slideTo(item,dir);placeGlider();
   try{history.replaceState(null,'','#'+item.id)}catch(e){}
   store.set('stillroom.item',item.id);
   if(playing){stopScene(scene);scene=createScene(item)}
   updateStatus();mediaMeta();
 }
+function step(d){const list=inGroup(current.g),i=list.indexOf(current);select(list[(i+d+list.length)%list.length],d)}
+
+const drag={x:0,y:0,on:false,moved:false};
+const hero=$('hero');
+hero.addEventListener('pointerdown',e=>{if(e.button>0)return;Object.assign(drag,{x:e.clientX,y:e.clientY,on:true,moved:false})});
+hero.addEventListener('pointermove',e=>{if(!drag.on)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(!drag.moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){drag.moved=true;try{hero.setPointerCapture(e.pointerId)}catch(_){}}
+  if(drag.moved){const el=$('slide');el.className='slide';el.style.transform=`translateX(${dx*.65}px)`;el.style.opacity=String(Math.max(.15,1-Math.abs(dx)/260))}});
+hero.addEventListener('pointerup',e=>{if(!drag.on)return;drag.on=false;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+  if(drag.moved){if(Math.abs(dx)>60)step(dx<0?1:-1);else{const el=$('slide');el.className='slide anim';el.style.transform='translateX(0)';el.style.opacity='1'}return}
+  if(Math.abs(dx)<10&&Math.abs(dy)<10){ripple(e);toggle()}});
+hero.addEventListener('pointercancel',()=>{drag.on=false;const el=$('slide');el.className='slide anim';el.style.transform='translateX(0)';el.style.opacity='1'});
+hero.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();toggle()}});
+function ripple(e){const r=document.createElement('span');r.className='tap-ring';const b=$('stage').getBoundingClientRect();
+  r.style.left=(e.clientX-b.left)+'px';r.style.top=(e.clientY-b.top)+'px';$('stage').appendChild(r);setTimeout(()=>r.remove(),1000)}
+
+/* ---- playback ---- */
 let hintTimer=0;
 function updateStatus(){
   $('stage').classList.toggle('playing',playing);engine.setFrozen(!playing);
-  $('hero').setAttribute('aria-label',playing?'Pause':'Play');
+  hero.setAttribute('aria-label',playing?'Pause':'Play');
   $('hintText').textContent=playing?'Tap to pause':'Tap to listen';
   const h=$('hint');h.classList.remove('fade');clearTimeout(hintTimer);if(playing)hintTimer=setTimeout(()=>h.classList.add('fade'),3500);
-  markCards();
 }
 function play(){
   if(!ac)initAudio();ac.resume();
@@ -480,11 +504,6 @@ function play(){
 }
 function pause(){playing=false;stopScene(scene);scene=null;updateStatus();try{navigator.mediaSession.playbackState='paused'}catch(e){}}
 function toggle(){playing?pause():play()}
-let swiped=false;
-$('hero').addEventListener('click',e=>{if(swiped){swiped=false;return}
-  const r=document.createElement('span');r.className='tap-ring';const b=$('stage').getBoundingClientRect();
-  r.style.left=(e.clientX-b.left)+'px';r.style.top=(e.clientY-b.top)+'px';$('stage').appendChild(r);setTimeout(()=>r.remove(),1000);toggle()});
-$('hero').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();toggle()}});
 
 // Sleep timer: off → 15 → 30 → 60 → 90 min; fades out over the last 30 s
 const TIMES=[0,15,30,60,90];let ti=0,timerEnd=0,fading=false;
@@ -504,15 +523,11 @@ setInterval(tickTimer,1000);
 function setClean(v){clean=v;$('stage').classList.toggle('clean',v);document.querySelectorAll('.ui').forEach(el=>el.inert=v)}
 $('hide').onclick=()=>setClean(true);$('restore').onclick=()=>setClean(false);$('cleanTap').onclick=()=>setClean(false);
 
-function step(d){const list=ITEMS.filter(i=>i.g===current.g),i=list.indexOf(current);select(list[(i+d+list.length)%list.length])}
-// Swipe on the hero to move through the current group
-let sx=0,sy=0;
-$('hero').addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
-$('hero').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;swiped=Math.abs(dx)>30||Math.abs(dy)>30;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1)},{passive:true});
 document.addEventListener('keydown',e=>{
   if(e.altKey||e.metaKey||e.ctrlKey)return;
   if(e.code==='Space'){e.preventDefault();toggle()}
   else if(e.key==='ArrowRight')step(1);else if(e.key==='ArrowLeft')step(-1);
+  else if(e.key==='ArrowDown')stepGroup(1);else if(e.key==='ArrowUp')stepGroup(-1);
   else if(e.key.toLowerCase()==='h')setClean(!clean);else if(e.key==='Escape'&&clean)setClean(false);
 });
 function mediaMeta(){try{
@@ -526,8 +541,9 @@ function mediaMeta(){try{
   const v=parseFloat(store.get('stillroom.vol'));if(!isNaN(v))vol=v;
   const id=(location.hash||'').slice(1)||store.get('stillroom.item');
   const found=ITEMS.find(i=>i.id===id||bgId(i)===id)||ITEMS[0];
-  current=found;group=found.g;engine.setPreset(bgId(found));
-  renderTabs();renderCards(false);setText(found,true);updateStatus();mediaMeta();
+  current=null;select(found,0);
+  $('glider').style.transition='none';placeGlider();void $('glider').offsetWidth;$('glider').style.transition='';
+  (document.fonts&&document.fonts.ready||Promise.resolve()).then(()=>placeGlider());
 })();
 </script>
 </body>
