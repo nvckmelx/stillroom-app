@@ -3,172 +3,167 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<meta name="theme-color" content="#131419">
+<meta name="theme-color" content="#060c11">
 <meta name="color-scheme" content="dark">
 <title>Stillroom</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=IBM+Plex+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap">
 <style>
-/* Layout: full-bleed living background, one centred statement (Mercury hero), glass dock of choices pinned to the bottom */
+/* Layout: procedural world full-bleed (Codex motion studies), centred hero with a glass play pill,
+   segmented tabs + thumbnail cards docked at the bottom. Phone first. */
 :root{
-  --bg:#131419;
-  --fg:#eceef5;
-  --muted:rgba(236,238,245,.64);
-  --faint:rgba(236,238,245,.13);
-  --glass:rgba(20,22,30,.40);
-  --glass-hi:rgba(255,255,255,.09);
-  --chip-on:#eceef5;
-  --chip-on-fg:#15161c;
-  --accent:#5868f0;
-  --accent-hi:#6c7af5;
-  --f-display:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;
-  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --bg:#060c11;
+  --ink:#edf0ea;
+  --quiet:#9ca9aa;
+  --dim:#708583;
+  --line:rgba(214,228,220,.13);
+  --glass:rgba(166,200,199,.05);
+  --glass-hi:rgba(178,197,200,.12);
+  --accent:#aec7b6;
+  --f-ui:Inter,"Helvetica Neue",Helvetica,Arial,sans-serif;
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
-html,body{height:100%}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-display);overflow:hidden;-webkit-font-smoothing:antialiased;font-size:15px}
-button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--accent-hi);outline-offset:3px}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-ui);-webkit-font-smoothing:antialiased}
+body{overflow:hidden;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+button:focus-visible{outline:2px solid #c5d9d4;outline-offset:4px}
+svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.3;fill:none;flex:none}
 
-.stage{position:fixed;inset:0;z-index:0;overflow:hidden;background:var(--bg)}
-#bg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.media{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 2.2s ease}
-.media.on{opacity:1}
-.veil{position:absolute;inset:0;background:
-  radial-gradient(120% 95% at 50% 42%,transparent 38%,rgba(9,10,14,.55) 100%),
-  linear-gradient(to bottom,rgba(10,11,15,.40),transparent 20%,transparent 52%,rgba(10,11,15,.78))}
-.grain{position:absolute;inset:-60%;opacity:.07;mix-blend-mode:overlay;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation:grain 1.4s steps(6) infinite}
-@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+#stage{position:relative;height:100%;isolation:isolate;overflow:hidden;container:stage/size}
+#world{position:absolute;inset:0;z-index:-3}
+.readability{position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 42%,rgba(2,8,14,.30),transparent 55%),linear-gradient(0deg,rgba(4,10,16,.86),transparent 42%),linear-gradient(180deg,rgba(4,10,16,.5),transparent 18%)}
+.grain{position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.91' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.5' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-.app{position:relative;z-index:1;height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr auto;padding-inline:clamp(16px,4vw,44px)}
+.app{position:relative;height:100%;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;grid-template-columns:minmax(0,1fr);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px}
-.brand{display:flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.24em;font-size:12.5px;font-weight:500}
-.brand svg{width:26px;height:26px}
-.tools{display:flex;align-items:center;gap:8px}
-.pill{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:var(--glass);border:1px solid var(--faint);
-  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);font-size:13px;color:var(--fg)}
-button.pill:hover{background:var(--glass-hi)}
-.pill .mono{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-#vol{width:84px;accent-color:var(--fg)}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 20px 8px}
+.brand{display:flex;align-items:center;gap:11px;font-size:20px;font-weight:400;letter-spacing:-.7px}
+.mark{width:24px;height:24px;position:relative;flex:none}
+.mark::before,.mark::after{content:"";position:absolute;inset:3px;border:1px solid #a9bdb7;border-radius:50%}
+.mark::after{inset:8px 0 0 8px;border-color:#a9bdb770}
+.actions{display:flex;align-items:center;gap:8px}
+.icon-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 13px;border:1px solid var(--line);border-radius:30px;
+  background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);font-size:11.5px;color:#d7e1dc;transition:background .2s,border-color .2s}
+.icon-button:active,.icon-button:hover{background:var(--glass-hi)}
+.icon-button.square{width:36px;padding:0}
+.timer-left{font-variant-numeric:tabular-nums;color:var(--quiet)}
 
-.hero{display:grid;place-content:center;grid-template-columns:minmax(0,600px);justify-items:center;text-align:center;gap:16px;padding-block:20px}
-.eyebrow{font-family:var(--f-mono);font-size:11.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
-h1{margin:0;font-weight:300;font-size:clamp(46px,8.4vw,104px);letter-spacing:-.04em;line-height:.96;text-wrap:balance;max-width:14ch}
-.sub{margin:0;font-size:clamp(15px,1.55vw,18px);line-height:1.5;color:var(--muted);max-width:44ch;text-wrap:pretty}
-.swap{transition:opacity .35s ease,transform .45s ease}
-.swap.out{opacity:0;transform:translateY(6px)}
+.hero{display:grid;place-content:center;justify-items:center;text-align:center;padding:12px 20px 18px;touch-action:pan-y}
+.eyebrow{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#b4c3bd;margin:0 0 18px;display:flex;gap:12px;align-items:center}
+.eyebrow::before,.eyebrow::after{content:"";width:22px;height:1px;background:#bacdc13d}
+h1{font-weight:200;font-size:clamp(44px,13cqw,80px);letter-spacing:-.065em;line-height:1.05;margin:0 0 12px;text-shadow:0 2px 30px #050a0c60;text-wrap:balance;max-width:11ch}
+.description{font-size:13.5px;font-weight:300;color:#c4d0cb;letter-spacing:.03em;margin:0}
+.meta{font-size:10.5px;font-weight:400;color:var(--dim);letter-spacing:.06em;margin:8px 0 0;max-width:34ch;line-height:1.5}
+.swap{transition:opacity .4s ease,transform .5s ease}
+.swap.out{opacity:0;transform:translateY(5px)}
 
-.player{margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:14px;width:min(420px,100%);
-  padding:6px 6px 6px 20px;border-radius:999px;background:var(--glass);border:1px solid var(--faint);
-  -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
-.status{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bars{display:flex;align-items:flex-end;gap:2px;height:14px;flex:none}
-.bars i{display:block;width:2px;height:4px;border-radius:1px;background:var(--fg);opacity:.75}
-.playing .bars i{animation:eq 1.2s ease-in-out infinite}
-.bars i:nth-child(2){animation-delay:-.3s}.bars i:nth-child(3){animation-delay:-.7s}.bars i:nth-child(4){animation-delay:-.15s}
-@keyframes eq{0%,100%{height:4px}50%{height:14px}}
-.play{flex:none;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 22px;border:0;border-radius:999px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;transition:background .2s}
-.play:hover{background:var(--accent-hi)}
-.play svg{width:14px;height:14px}
+.play{margin-top:26px;display:inline-flex;align-items:center;gap:12px;height:48px;padding:0 26px 0 22px;border:1px solid #d9e6e033;border-radius:50px;
+  background:linear-gradient(120deg,#dcebe01c,#c6e3db08);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  font-size:13px;font-weight:400;letter-spacing:.02em;box-shadow:0 8px 30px #0000001a;transition:background .2s,transform .12s}
+.play:hover{background:#dcebe026}
+.play:active{transform:scale(.97)}
+.play svg{width:14px;height:14px;fill:currentColor;stroke:none}
+.bars{display:none;align-items:flex-end;gap:2px;height:12px}
+.bars i{display:block;width:2px;height:4px;border-radius:1px;background:var(--accent)}
+.playing .bars{display:flex}
+.playing .bars i{animation:eq 1.3s ease-in-out infinite}
+.bars i:nth-child(2){animation-delay:-.35s}.bars i:nth-child(3){animation-delay:-.75s}
+@keyframes eq{0%,100%{height:3px}50%{height:12px}}
 
-.dock{display:grid;gap:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
-.tabs{display:flex;justify-content:center;gap:clamp(14px,3vw,28px);flex-wrap:wrap}
-.tab{background:none;border:0;padding:6px 0;font-size:14px;color:var(--muted);border-bottom:1px solid transparent}
-.tab[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--fg)}
-.tab:hover{color:var(--fg)}
-.chips{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;padding:4px 2px;justify-content:safe center;scrollbar-width:none;
-  -webkit-mask-image:linear-gradient(to right,transparent,#000 24px,#000 calc(100% - 24px),transparent);mask-image:linear-gradient(to right,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
-.chips::-webkit-scrollbar{display:none}
-.chip{flex:none;scroll-snap-align:center;display:grid;gap:3px;text-align:left;min-width:138px;padding:11px 16px;border-radius:16px;
-  background:var(--glass);border:1px solid var(--faint);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);transition:background .2s,color .2s}
-.chip:first-child{margin-left:20px}.chip:last-child{margin-right:20px}
-.chip:hover{background:var(--glass-hi)}
-.chip b{font-weight:500;font-size:14px}
-.chip small{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.04em;color:var(--muted)}
-.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-fg);border-color:transparent}
-.chip[aria-pressed="true"] small{color:rgba(21,22,28,.6)}
-.note{display:flex;justify-content:center;gap:8px 18px;flex-wrap:wrap;font-size:12px;color:var(--muted);text-align:center}
-.note kbd{font-family:var(--f-mono);font-size:10.5px;padding:1px 6px;border:1px solid var(--faint);border-radius:5px}
+.collection{display:grid;gap:14px;min-width:0}
+.tabs{display:flex;gap:2px;margin:0 18px;padding:4px;border:1px solid #ccddd51a;border-radius:30px;background:#030b102e;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+.tab{flex:1;border-radius:24px;padding:9px 4px;color:#92a3a4;font-size:11px;white-space:nowrap;transition:color .2s,background .2s}
+.tab[aria-selected="true"]{background:#d5e5db14;color:#e2ebe5;box-shadow:inset 0 0 0 1px #d3e4d71a}
+.cards{display:flex;gap:10px;overflow-x:auto;padding:2px 18px 4px;scroll-snap-type:x proximity;scrollbar-width:none;scroll-padding-inline:18px}
+.cards::-webkit-scrollbar{display:none}
+.card{position:relative;flex:0 0 138px;height:104px;border:1px solid #c5dfd51c;overflow:hidden;border-radius:12px;background:#091218;text-align:left;
+  scroll-snap-align:start;transition:border-color .2s,transform .12s}
+.card:active{transform:scale(.97)}
+.card[aria-pressed="true"]{border-color:#b5d4bc8c;box-shadow:0 0 0 1px #b5d4bc16}
+.thumb{position:absolute;inset:0;opacity:.92;pointer-events:none}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#040c12f2,#040c1210 85%)}
+.card-title{position:absolute;bottom:25px;left:12px;right:8px;z-index:1;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{position:absolute;bottom:10px;left:12px;right:8px;z-index:1;font-size:9px;color:#8ca39d;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{position:absolute;top:10px;right:10px;width:5px;height:5px;border-radius:50%;background:#d1e5c9;box-shadow:0 0 10px #b7d3af77;z-index:2;opacity:0}
+.card[aria-pressed="true"] .dot{opacity:1}
+.playing-card .dot{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
 
-@media (max-width:640px){
-  .vol-wrap{display:none}
-  .hero{gap:12px}
-  .chip{min-width:124px}
-  .note .keys{display:none}
+footer{display:flex;justify-content:space-between;gap:10px;white-space:nowrap;padding:12px 20px 0;color:var(--dim);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase}
+
+.ui{transition:opacity .55s,visibility .55s}
+.clean .ui{opacity:0;visibility:hidden;pointer-events:none}
+.restore{position:absolute;right:18px;top:calc(18px + env(safe-area-inset-top,0px));z-index:5;opacity:0;visibility:hidden;transition:opacity .3s}
+.clean .restore{opacity:.75;visibility:visible}
+.clean-tap{position:absolute;inset:0;z-index:4;display:none}
+.clean .clean-tap{display:block}
+
+@container stage (min-width:700px){
+  header{padding:30px 40px 8px}
+  .tabs{align-self:center;justify-self:center;width:min(520px,calc(100% - 80px));margin:0}
+  .cards{padding-inline:40px;scroll-padding-inline:40px;justify-content:safe center}
+  .card{flex-basis:160px;height:116px}
+  footer{padding-inline:42px}
+  .description{font-size:14.5px}
+}
+@container stage (max-height:640px){
+  h1{font-size:44px}.eyebrow{margin-bottom:10px}.play{margin-top:16px}.card{height:88px}.meta{display:none}
 }
 @media (prefers-reduced-motion:reduce){
-  .grain,.playing .bars i{animation:none}
-  .swap,.media{transition:none}
+  .swap,.ui{transition:none}.playing .bars i,.playing-card .dot{animation:none}
 }
-/* --- mobile app shell --- */
-[hidden]{display:none!important}
-html{background:var(--bg)}
-body{margin:0;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-.app{padding-top:env(safe-area-inset-top,0px)}
-header{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-.vol-wrap,.note .keys{display:none}
-.chip:active,.play:active{transform:scale(.97)}
-.chip,.play{transition:background .2s,color .2s,transform .12s}
 </style>
 </head>
 <body>
+<main id="stage">
+  <div id="world" aria-hidden="true"></div><div class="readability"></div><div class="grain"></div>
+  <div class="app">
+    <header class="ui">
+      <div class="brand"><span class="mark" aria-hidden="true"></span>stillroom</div>
+      <div class="actions">
+        <button class="icon-button" id="timer" type="button" aria-label="Sleep timer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+          <span class="timer-left" id="timerLabel">Timer</span>
+        </button>
+        <button class="icon-button square" id="hide" type="button" aria-label="Hide interface">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg>
+        </button>
+      </div>
+    </header>
 
-<div class="stage" aria-hidden="true">
-  <canvas id="bg"></canvas>
-  <video class="media" id="bgVideo" muted loop playsinline></video>
-  <img class="media" id="bgImage" alt="">
-  <div class="veil"></div>
-  <div class="grain"></div>
-</div>
-
-<div class="app">
-  <header>
-    <div class="brand">
-      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
-        <circle cx="16" cy="16" r="14.5"/><circle cx="16" cy="16" r="10"/><circle cx="16" cy="16" r="5.5"/><circle cx="16" cy="16" r="1.4" fill="currentColor"/>
-      </svg>
-      Stillroom
-    </div>
-    <div class="tools">
-      <button class="pill" id="timer" type="button" title="Sleep timer: fades out and stops">Timer <span class="mono" id="timerLabel">off</span></button>
-      <label class="pill vol-wrap" for="vol">Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="0.7"></label>
-    </div>
-  </header>
-
-  <main class="hero">
-    <div class="eyebrow swap" id="eyebrow">432 Hz tuning</div>
-    <h1 class="swap" id="title">Stress relief</h1>
-    <p class="sub swap" id="desc">Warm pads that rise and fall.</p>
-    <div class="player" id="player">
-      <div class="status"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span id="status">Press play</span></div>
+    <section class="hero ui" id="hero" aria-labelledby="title">
+      <p class="eyebrow swap" id="eyebrow">A little room to breathe</p>
+      <h1 class="swap" id="title">Stress relief</h1>
+      <p class="description swap" id="description">Let the weight fall away</p>
+      <p class="meta swap" id="meta">432 Hz tuning · one swell every 10 s</p>
       <button class="play" id="play" type="button" aria-label="Play">
-        <svg id="icPlay" viewBox="0 0 14 14" fill="currentColor"><path d="M3 1.5v11l9.5-5.5z"/></svg>
-        <svg id="icPause" viewBox="0 0 14 14" fill="currentColor" hidden><rect x="2.5" y="1.5" width="3" height="11" rx=".6"/><rect x="8.5" y="1.5" width="3" height="11" rx=".6"/></svg>
+        <svg id="icPlay" viewBox="0 0 14 14"><path d="M3 1.5v11l9.5-5.5z"/></svg>
+        <svg id="icPause" viewBox="0 0 14 14" hidden><rect x="2.5" y="1.5" width="3" height="11" rx=".6"/><rect x="8.5" y="1.5" width="3" height="11" rx=".6"/></svg>
         <span id="playLabel">Play</span>
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
       </button>
-    </div>
-  </main>
+    </section>
 
-  <section class="dock" aria-label="Choose a sound">
-    <div class="tabs" role="tablist" id="tabs"></div>
-    <div class="chips" id="chips"></div>
-    <div class="note"><span>Binaural beats need headphones. For relaxation, not medical treatment.</span><span class="keys"><kbd>Space</kbd> play · <kbd>←</kbd><kbd>→</kbd> switch</span></div>
-  </section>
-</div>
+    <section class="collection ui" aria-label="Choose a sound">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <div class="cards" id="cards" role="tabpanel"></div>
+    </section>
 
+    <footer class="ui"><span>33 worlds. One quiet place.</span><span>Headphones for binaural</span></footer>
+  </div>
+  <div class="clean-tap" id="cleanTap" aria-hidden="true"></div>
+  <button class="icon-button restore" id="restore" type="button" aria-label="Show interface">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 12h16M4 16h16"/></svg>Show
+  </button>
+</main>
+<script src="backgrounds.js"></script>
 <script>
-/*  STILLROOM — content map
-    Every option can use a Suno track and a background video/image instead of the live generator:
-      track: 'audio/stress-relief.mp3'   (loops; falls back to the generator if it fails to load)
-      video: 'video/stress-relief.mp4'   or   image: 'img/stress-relief.jpg'
-    Binaural and Hz options take  bed: 'audio/bed-alpha.mp3'  — a quiet Suno bed under the exact tone.
-    Leave them empty to use the built-in generative sound and animated gradient. */
-
 const GROUPS=[
   {id:'moods',label:'Moods'},
   {id:'binaural',label:'Binaural'},
@@ -253,7 +248,7 @@ const ITEMS=[
     [852,'Intuition','Traditionally linked with inner calm and awareness.'],
     [963,'Awareness','The highest Solfeggio tone, traditionally linked with a sense of oneness.']
   ].map(([f,label,desc],i,arr)=>({id:f+'hz',g:'freq',kind:'tone',f,name:f+' Hz',chip:label,speed:.7,
-     meta:(f===432?'Tuning':'Solfeggio')+' · pure sine + tuned drone · '+label,desc,
+     meta:(f===432?'Tuning':'Solfeggio')+' · pure sine + tuned drone',desc,
      pal:hzPalette(i/(arr.length-1)),track:'',video:''})),
 
   // ---------- Nature & noise ----------
@@ -419,40 +414,61 @@ function stopScene(S){
 }
 setInterval(()=>{if(!ac||!scene||scene.dead||!scene.tick)return;scene.tick(scene,ac.currentTime,document.hidden?2.5:.7)},150);
 
-/* ---------------- UI ---------------- */
+
+/* ---------------- UI (Codex motion-studies design) ---------------- */
 const $=id=>document.getElementById(id);
-let current=ITEMS[0],group='moods';
+const INTRO={moods:'A little room to breathe',binaural:'A quieter state of mind',freq:'Find your own resonance',nature:'Closer to the natural world'};
+// Our style ids → Codex background preset ids
+const BG_ALIAS={relaxation:'deep-relaxation',lofi:'lo-fi-chill',spa:'spa-yoga',morning:'gentle-morning','forest-night':'forest'};
+const bgId=i=>BG_ALIAS[i.id]||(i.kind==='tone'?'hz-'+i.f:i.id);
+const BGP=Object.fromEntries(StillroomBackgrounds.presets.map(p=>[p.id,p]));
+let current=ITEMS[0],group='moods',thumbs=[],clean=false;
+const engine=StillroomBackgrounds.mount($('world'),{preset:bgId(current),maxDpr:1.5,transitionDuration:1800});
 
 function renderTabs(){
-  $('tabs').innerHTML='';
+  $('tabs').replaceChildren();
   GROUPS.forEach(g=>{const b=document.createElement('button');b.className='tab';b.type='button';b.setAttribute('role','tab');b.textContent=g.label;
-    b.setAttribute('aria-selected',g.id===group);b.onclick=()=>{group=g.id;renderTabs();renderChips(true)};$('tabs').appendChild(b)});
+    b.setAttribute('aria-selected',g.id===group);b.onclick=()=>{if(group===g.id)return;group=g.id;renderTabs();renderCards(true)};$('tabs').appendChild(b)});
 }
-function renderChips(scroll){
-  const box=$('chips');box.innerHTML='';
-  ITEMS.filter(i=>i.g===group).forEach(i=>{const b=document.createElement('button');b.className='chip';b.type='button';
-    b.setAttribute('aria-pressed',i===current);b.innerHTML='<b></b><small></small>';b.querySelector('b').textContent=i.name;b.querySelector('small').textContent=i.chip;
-    b.onclick=()=>{select(i);if(!playing)play()};box.appendChild(b)});
-  const on=box.querySelector('[aria-pressed="true"]');if(on)on.scrollIntoView({block:'nearest',inline:'center',behavior:scroll?'smooth':'auto'});else if(scroll)box.scrollLeft=0;
+function renderCards(fromTab){
+  thumbs.forEach(t=>t.destroy());thumbs=[];const box=$('cards');box.replaceChildren();
+  ITEMS.filter(i=>i.g===group).forEach(i=>{
+    const b=document.createElement('button');b.className='card';b.type='button';b.dataset.id=i.id;
+    b.setAttribute('aria-pressed',i===current);b.setAttribute('aria-label',i.name+', '+i.chip);
+    const th=document.createElement('span');th.className='thumb';th.setAttribute('aria-hidden','true');
+    const t=document.createElement('span');t.className='card-title';t.textContent=i.name;
+    const m=document.createElement('span');m.className='card-meta';m.textContent=i.chip;
+    const d=document.createElement('span');d.className='dot';
+    b.append(th,t,m,d);b.onclick=()=>{select(i);if(!playing)play()};box.appendChild(b);
+    thumbs.push(StillroomBackgrounds.mount(th,{preset:bgId(i),reducedMotion:true,maxDpr:1}));
+  });
+  markCards();
+  const on=box.querySelector('[aria-pressed="true"]');
+  if(on)box.scrollTo({left:Math.max(0,on.offsetLeft-box.clientWidth/2+on.clientWidth/2),behavior:fromTab?'smooth':'auto'});else box.scrollTo({left:0,behavior:fromTab?'smooth':'auto'});
+}
+function markCards(){
+  $('cards').querySelectorAll('.card').forEach(b=>{const on=b.dataset.id===current.id;b.setAttribute('aria-pressed',on);b.classList.toggle('playing-card',on&&playing)});
 }
 function setText(item,instant){
-  const els=[$('eyebrow'),$('title'),$('desc')];
-  const apply=()=>{$('eyebrow').textContent=item.meta;$('title').textContent=item.name;$('desc').textContent=item.desc;els.forEach(e=>e.classList.remove('out'))};
-  if(instant)return apply();els.forEach(e=>e.classList.add('out'));setTimeout(apply,260);
+  const els=['eyebrow','title','description','meta'].map($);
+  const apply=()=>{$('eyebrow').textContent=INTRO[item.g];$('title').textContent=item.name;
+    $('description').textContent=(BGP[bgId(item)]||{}).description||item.chip;$('meta').textContent=item.meta;els.forEach(e=>e.classList.remove('out'))};
+  if(instant)return apply();els.forEach(e=>e.classList.add('out'));setTimeout(apply,280);
 }
 function select(item,instant){
   if(item===current&&!instant)return;
-  current=item;group=item.g;renderTabs();renderChips(!instant);setText(item,instant);setPalette(item);setMedia(item);
+  current=item;engine.setPreset(bgId(item));setText(item,instant);
+  if(group!==item.g){group=item.g;renderTabs();renderCards(false)}else{markCards();const on=$('cards').querySelector('[aria-pressed="true"]');
+    if(on&&!instant){const box=$('cards');box.scrollTo({left:Math.max(0,on.offsetLeft-box.clientWidth/2+on.clientWidth/2),behavior:'smooth'})}}
   try{history.replaceState(null,'','#'+item.id)}catch(e){}
   store.set('stillroom.item',item.id);
   if(playing){stopScene(scene);scene=createScene(item)}
   updateStatus();mediaMeta();
 }
 function updateStatus(){
-  $('player').classList.toggle('playing',playing);
-  $('status').textContent=!playing?(ac?'Paused':'Press play'):(scene&&scene.isTrack?'Playing · track':'Playing · live');
+  $('play').classList.toggle('playing',playing);
   $('playLabel').textContent=playing?'Pause':'Play';$('play').setAttribute('aria-label',playing?'Pause':'Play');
-  $('icPlay').toggleAttribute('hidden',playing);$('icPause').toggleAttribute('hidden',!playing);
+  $('icPlay').toggleAttribute('hidden',playing);$('icPause').toggleAttribute('hidden',!playing);markCards();
 }
 function play(){
   if(!ac)initAudio();ac.resume();
@@ -463,25 +479,34 @@ function play(){
 function pause(){playing=false;stopScene(scene);scene=null;updateStatus();try{navigator.mediaSession.playbackState='paused'}catch(e){}}
 $('play').onclick=()=>playing?pause():play();
 
-$('vol').oninput=e=>{vol=+e.target.value;store.set('stillroom.vol',vol);if(ac)master.gain.setTargetAtTime(vol*vol,ac.currentTime,.05)};
-
-// Sleep timer: cycles off → 15 → 30 → 60 → 90 min, fades out over the last 30 s
+// Sleep timer: off → 15 → 30 → 60 → 90 min; fades out over the last 30 s
 const TIMES=[0,15,30,60,90];let ti=0,timerEnd=0,fading=false;
-$('timer').onclick=()=>{ti=(ti+1)%TIMES.length;timerEnd=TIMES[ti]?Date.now()+TIMES[ti]*60000:0;fading=false;tickTimer();if(TIMES[ti]&&!playing)play()};
+$('timer').onclick=()=>{ti=(ti+1)%TIMES.length;timerEnd=TIMES[ti]?Date.now()+TIMES[ti]*60000:0;fading=false;
+  if(ac&&playing&&!timerEnd){master.gain.cancelScheduledValues(ac.currentTime);master.gain.setTargetAtTime(vol*vol,ac.currentTime,.1)}
+  tickTimer();if(TIMES[ti]&&!playing)play()};
 function tickTimer(){
-  if(!timerEnd){$('timerLabel').textContent='off';return}
+  if(!timerEnd){$('timerLabel').textContent='Timer';return}
   const left=Math.max(0,timerEnd-Date.now()),m=Math.floor(left/60000),s=Math.floor(left/1000)%60;
   $('timerLabel').textContent=m+':'+String(s).padStart(2,'0');
   if(ac&&playing&&left<30000&&!fading){fading=true;master.gain.cancelScheduledValues(ac.currentTime);master.gain.setValueAtTime(master.gain.value,ac.currentTime);master.gain.linearRampToValueAtTime(0,ac.currentTime+left/1000)}
-  if(left===0){timerEnd=0;ti=0;fading=false;if(playing)pause();$('timerLabel').textContent='off'}
+  if(left===0){timerEnd=0;ti=0;fading=false;if(playing)pause();$('timerLabel').textContent='Timer'}
 }
 setInterval(tickTimer,1000);
 
+// Immersive mode: hide everything but the world; tap anywhere to come back
+function setClean(v){clean=v;$('stage').classList.toggle('clean',v);document.querySelectorAll('.ui').forEach(el=>el.inert=v)}
+$('hide').onclick=()=>setClean(true);$('restore').onclick=()=>setClean(false);$('cleanTap').onclick=()=>setClean(false);
+
 function step(d){const list=ITEMS.filter(i=>i.g===current.g),i=list.indexOf(current);select(list[(i+d+list.length)%list.length])}
+// Swipe on the hero to move through the current group
+let sx=0,sy=0;
+$('hero').addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+$('hero').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1)},{passive:true});
 document.addEventListener('keydown',e=>{
-  if(e.target.closest('input'))return;
+  if(e.altKey||e.metaKey||e.ctrlKey)return;
   if(e.code==='Space'){e.preventDefault();playing?pause():play()}
   else if(e.key==='ArrowRight')step(1);else if(e.key==='ArrowLeft')step(-1);
+  else if(e.key.toLowerCase()==='h')setClean(!clean);else if(e.key==='Escape'&&clean)setClean(false);
 });
 function mediaMeta(){try{
   navigator.mediaSession.metadata=new MediaMetadata({title:current.name,artist:'Stillroom',album:GROUPS.find(g=>g.id===current.g).label});
@@ -489,45 +514,13 @@ function mediaMeta(){try{
   navigator.mediaSession.setActionHandler('nexttrack',()=>step(1));navigator.mediaSession.setActionHandler('previoustrack',()=>step(-1));
 }catch(e){}}
 
-/* ---------------- Background ---------------- */
-const cv=$('bg'),g2=cv.getContext('2d');
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
-let col=current.pal.map(rgb),target=col.map(c=>c.slice()),speed=1,tSpeed=1,level=0,clock=0,last=performance.now();
-function setPalette(item){target=item.pal.map(rgb);tSpeed=item.speed||1}
-function setMedia(item){
-  const v=$('bgVideo'),im=$('bgImage');
-  if(item.video){if(v.getAttribute('src')!==item.video){v.src=item.video;v.play().catch(()=>{})}v.classList.add('on');im.classList.remove('on')}
-  else if(item.image){im.src=item.image;im.classList.add('on');v.classList.remove('on')}
-  else{v.classList.remove('on');im.classList.remove('on')}
-}
-const BLOBS=[[0,.30,.38,.13,.17,0],[1,.70,.34,.11,.09,2],[2,.52,.70,.09,.14,4],[0,.18,.78,.07,.12,1],[1,.86,.74,.12,.08,3]];
-const td=new Uint8Array(256);
-function frame(now){
-  const dt=Math.min(.05,(now-last)/1000);last=now;
-  const W=Math.max(32,Math.ceil(innerWidth/7)),H=Math.max(32,Math.ceil(innerHeight/7));if(cv.width!==W||cv.height!==H){cv.width=W;cv.height=H}
-  for(let i=0;i<4;i++)for(let k=0;k<3;k++)col[i][k]+=(target[i][k]-col[i][k])*Math.min(1,dt*1.2);
-  speed+=(tSpeed-speed)*dt;
-  if(analyser&&playing){analyser.getByteTimeDomainData(td);let s=0;for(let i=0;i<td.length;i++){const v=(td[i]-128)/128;s+=v*v}level+=(Math.sqrt(s/td.length)*4-level)*.06}else level*=.96;
-  clock+=dt*speed*(reduce?.15:1);
-  const c=col[0];g2.globalCompositeOperation='source-over';g2.fillStyle=`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;g2.fillRect(0,0,W,H);
-  g2.globalCompositeOperation='screen';
-  const R=Math.max(W,H)*.62*(1+Math.min(level,1)*.25);
-  BLOBS.forEach(([ci,x,y,ax,ay,ph],n)=>{
-    const cc=col[1+ci],px=(x+Math.sin(clock*.11+ph)*ax)*W,py=(y+Math.cos(clock*.09+ph*1.3)*ay)*H,r=R*(.75+.25*Math.sin(clock*.07+n));
-    const gr=g2.createRadialGradient(px,py,0,px,py,r),col0=`${cc[0]|0},${cc[1]|0},${cc[2]|0}`;
-    gr.addColorStop(0,`rgba(${col0},.62)`);gr.addColorStop(.45,`rgba(${col0},.22)`);gr.addColorStop(1,`rgba(${col0},0)`);
-    g2.fillStyle=gr;g2.fillRect(0,0,W,H);
-  });
-  requestAnimationFrame(frame);
-}
-
 /* ---------------- Boot ---------------- */
 (function boot(){
-  const v=parseFloat(store.get('stillroom.vol'));if(!isNaN(v)){vol=v;$('vol').value=v}
-  const id=(location.hash||'').slice(1)||store.get('stillroom.item');const found=ITEMS.find(i=>i.id===id);
-  current=null;select(found||ITEMS[0],true);col=current.pal.map(rgb);speed=tSpeed;
-  requestAnimationFrame(frame);
+  const v=parseFloat(store.get('stillroom.vol'));if(!isNaN(v))vol=v;
+  const id=(location.hash||'').slice(1)||store.get('stillroom.item');
+  const found=ITEMS.find(i=>i.id===id||bgId(i)===id)||ITEMS[0];
+  current=found;group=found.g;engine.setPreset(bgId(found));
+  renderTabs();renderCards(false);setText(found,true);updateStatus();mediaMeta();
 })();
 </script>
 </body>
