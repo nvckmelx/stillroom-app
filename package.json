@@ -1,0 +1,25 @@
+{
+  "name": "stillroom-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stillroom — calm music, binaural beats and frequencies. Mobile MVP built with Capacitor.",
+  "scripts": {
+    "setup:android": "cap add android && npm run assets && cap sync android",
+    "setup:ios": "cap add ios && node scripts/patch-ios.mjs && npm run assets && cap sync ios",
+    "sync": "cap sync",
+    "android": "cap open android",
+    "ios": "cap open ios",
+    "assets": "capacitor-assets generate --iconBackgroundColor \"#131419\" --iconBackgroundColorDark \"#131419\" --splashBackgroundColor \"#131419\" --splashBackgroundColorDark \"#131419\""
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^7.0.0"
+  }
+}

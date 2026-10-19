@@ -1,0 +1,46 @@
+# Builds a test APK (Android) and a Simulator build (iOS) on every push.
+# Download them from the run page: Actions → latest run → Artifacts.
+name: Build app
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: npm install
+      - run: npm run setup:android
+      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stillroom-android-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+
+  ios-simulator:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run setup:ios
+      - run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug \
+            -sdk iphonesimulator -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
+      - run: cd ios/App/build/Build/Products/Debug-iphonesimulator && zip -r ../../../../../../stillroom-ios-simulator.zip App.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stillroom-ios-simulator
+          path: stillroom-ios-simulator.zip

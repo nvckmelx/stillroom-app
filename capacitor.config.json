@@ -1,0 +1,26 @@
+{
+  "appId": "com.stillroom.app",
+  "appName": "Stillroom",
+  "webDir": "www",
+  "backgroundColor": "#131419",
+  "android": {
+    "backgroundColor": "#131419"
+  },
+  "ios": {
+    "backgroundColor": "#131419",
+    "contentInset": "never"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 700,
+      "launchAutoHide": true,
+      "backgroundColor": "#131419",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "overlaysWebView": true,
+      "style": "DARK",
+      "backgroundColor": "#00000000"
+    }
+  }
+}
