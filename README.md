@@ -6,7 +6,8 @@
 
 ```
 stillroom-app/
-├─ www/index.html            ← само приложение (UI, звук, фоны)
+├─ www/index.html            ← само приложение (UI, звук, свайпы, таймер)
+├─ www/backgrounds.js        ← 33 процедурных фона (движок Codex / GPT-6 Astra + setFrozen)
 ├─ assets/                   ← иконка и заставка (из них генерируются все размеры)
 ├─ capacitor.config.json     ← id приложения com.stillroom.app, цвета, статус-бар
 ├─ scripts/patch-ios.mjs     ← включает фоновое аудио на iOS
@@ -53,6 +54,14 @@ npm run ios               # открывает Xcode → выберите iPhone
 Чтобы поставить приложение на свой iPhone, нужен Mac с Xcode. Бесплатного Apple ID хватает
 на установку на свой телефон (сборка живёт 7 дней). Для TestFlight и App Store нужен
 Apple Developer Program ($99 в год).
+
+## Фоны
+
+`www/backgrounds.js` — движок Codex без изменений сцен (сверено по md5 с финальной версией
+`c126003b…` из `Documents/Codex/2026-10-19/chatgpt-astra-x20/outputs/stillroom-backgrounds/`).
+Единственное дополнение — привязка к воспроизведению: `setFrozen(true|false)`. На паузе движение
+плавно останавливается (~2 с), при воспроизведении возвращается (~1,4 с); переходы между сценами
+идут и на паузе. Соответствие ID звука и фона — `BG_ALIAS` / `bgId()` в `www/index.html`.
 
 ## Ограничения MVP
 
