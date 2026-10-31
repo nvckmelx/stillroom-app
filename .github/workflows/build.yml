@@ -1,5 +1,9 @@
-# Builds a test APK (Android) and a Simulator build (iOS) on every push.
-# Download them from the run page: Actions → latest run → Artifacts.
+# Builds the Android test APK, the iOS simulator build and checks the PHP backend on every push.
+# main            → release "latest-build" (Stillroom.apk), as before
+# any other branch → its own pre-release "preview-<branch>"; main's release is never touched
+# The app reads published tracks from the CMS at runtime. Set the repository variable STILLROOM_API_BASE
+# (Settings → Secrets and variables → Actions → Variables), e.g. https://example.com/api/v1. Without it the app uses
+# its bundled offline catalog.
 name: Build app
 
 on:
@@ -10,6 +14,34 @@ permissions:
   contents: write
 
 jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_sqlite, pdo_mysql, gd, fileinfo, zip, intl
+      - name: Lint PHP
+        run: find server -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Migrations + import on SQLite
+        run: |
+          cd server
+          printf 'DB_DRIVER=sqlite\nDB_PATH=storage/ci.sqlite\nPUBLIC_DIR=public\nAPP_URL=http://localhost\n' > .env
+          php bin/migrate.php --seed
+          php -r 'require "src/bootstrap.php"; $c = Stillroom\Catalog::build(); if (count($c["tracks"]) !== 33) { fwrite(STDERR, "expected 33 tracks\n"); exit(1); } echo "catalog ok\n";'
+      - name: Migrations on MySQL 8
+        run: |
+          sudo systemctl start mysql
+          mysql -uroot -proot -e "CREATE DATABASE stillroom CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+          cd server
+          printf 'DB_DRIVER=mysql\nDB_HOST=127.0.0.1\nDB_NAME=stillroom\nDB_USER=root\nDB_PASS=root\nPUBLIC_DIR=public\nAPP_URL=http://localhost\n' > .env
+          php bin/migrate.php --seed
+          php bin/migrate.php --seed
+          ADMIN_PASSWORD=ci-password-123 php bin/create-admin.php ci@example.com admin
+          php -r 'require "src/bootstrap.php"; $c = Stillroom\Catalog::build(); if (count($c["tracks"]) !== 33) exit(1); echo "mysql catalog ok\n";'
+          php bin/backup.php --no-media
+
   android:
     runs-on: ubuntu-latest
     steps:
@@ -23,14 +55,15 @@ jobs:
           java-version: 21
       - run: npm install
       - run: npm run setup:android
+        env:
+          STILLROOM_API_BASE: ${{ vars.STILLROOM_API_BASE }}
       - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: stillroom-android-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      - run: cp android/app/build/outputs/apk/debug/app-debug.apk Stillroom.apk
       # Phone-friendly download: Releases → "Latest test build" → Stillroom.apk
-      - if: github.ref == 'refs/heads/main'
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk Stillroom.apk
       - if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -39,6 +72,15 @@ jobs:
           gh release create latest-build Stillroom.apk --prerelease \
             --title "Latest test build" \
             --notes "Android test build from ${GITHUB_SHA::7}. Open this page on your Android phone and tap Stillroom.apk to install."
+      - if: github.ref != 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="preview-$(echo "${GITHUB_REF_NAME}" | tr '/' '-' | tr -cd 'a-zA-Z0-9-')"
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" Stillroom.apk --prerelease --target "$GITHUB_SHA" \
+            --title "Preview: ${GITHUB_REF_NAME}" \
+            --notes "Test build of branch ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Not the main version. API: ${{ vars.STILLROOM_API_BASE || 'not set — offline catalog' }}"
 
   ios-simulator:
     runs-on: macos-latest
@@ -49,6 +91,8 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run setup:ios
+        env:
+          STILLROOM_API_BASE: ${{ vars.STILLROOM_API_BASE }}
       - run: |
           cd ios/App
           xcodebuild -workspace App.xcworkspace -scheme App -configuration Debug \

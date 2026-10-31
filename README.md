@@ -1,81 +1,53 @@
-# Stillroom — мобильное приложение (MVP)
+# Stillroom
 
-Приложение для Android и iOS на Capacitor: тот же Stillroom, что на сайте, в нативной оболочке.
-33 варианта звука (11 настроений, 5 бинауральных ритмов, 10 частот, 7 природных звуков и шумов),
-живой фон, таймер сна. Сеть не нужна: весь звук генерируется на телефоне.
+Спокойная музыка для сна, релаксации, медитации и фокуса: сайт, Android-приложение и CMS, в которой вы сами
+добавляете треки. Название рабочее — меняется в админке (**Site & SEO → Site name**) без правки кода.
 
 ```
-stillroom-app/
-├─ www/index.html            ← само приложение (UI, звук, свайпы, таймер)
-├─ www/backgrounds.js        ← 33 процедурных фона (движок Codex / GPT-6 Astra + setFrozen)
-├─ assets/                   ← иконка и заставка (из них генерируются все размеры)
-├─ capacitor.config.json     ← id приложения com.stillroom.app, цвета, статус-бар
-├─ scripts/patch-ios.mjs     ← включает фоновое аудио на iOS
-└─ .github/workflows/build.yml ← автосборка APK и iOS-симулятора на GitHub
+server/                  ← сайт + CMS (PHP 8.2+, MySQL/MariaDB; SQLite для разработки)
+├─ public/               ← содержимое public_html на Hostinger
+│  ├─ index.php          ← единая точка входа: сайт, /api/v1, /admin, /install
+│  ├─ app.html           ← оболочка веб-клиента (SEO подставляет сервер)
+│  ├─ assets/js/         ← клиент: app.js, player.js, listen.js, sound.js, backgrounds.js (33 сцены Codex) …
+│  ├─ admin-assets/      ← стили и скрипт админки
+│  └─ uploads/           ← загруженные аудио и обложки (скрипты здесь не исполняются)
+├─ src/                  ← код CMS (вне public_html)
+├─ templates/admin/      ← страницы админки
+├─ migrations/           ← схема БД (одна для MySQL и SQLite)
+├─ seed/catalog.json     ← исходный каталог: 33 трека, 4 категории, 14 тегов, 5 подборок
+├─ bin/                  ← migrate, create-admin, backup, restore, export-catalog
+├─ storage/              ← база SQLite, бэкапы, логи, сессии (вне public_html)
+└─ .env.example          ← настройки; настоящий .env никогда не попадает в git
+scripts/build-app.mjs    ← собирает www/ для Android из того же клиента
+capacitor.config.json    ← Android/iOS оболочка (Capacitor)
+docs/                    ← инструкции
 ```
 
-Папки `android/` и `ios/` не лежат в архиве: они создаются одной командой (ниже).
+## Документация
 
-## Установить на Android
+- [docs/DEPLOY-HOSTINGER.md](docs/DEPLOY-HOSTINGER.md) — как выложить на Hostinger (с SSH и без), база, бэкапы, обновления.
+- [docs/CMS-GUIDE.md](docs/CMS-GUIDE.md) — как добавлять музыку, подборки, менять главную, тексты, логотип и SEO.
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — почему так устроено, модель данных, API, безопасность, что проверено.
 
-Откройте на телефоне https://github.com/nvckmelx/stillroom-app/releases/tag/latest-build
-и нажмите **Stillroom.apk**. Каждый пуш в `main` обновляет этот файл автоматически.
+## Запуск на своём компьютере
 
-## Вариант 1. Собрать на GitHub, ничего не устанавливая
-
-1. Создайте пустой приватный репозиторий на github.com и загрузите в него содержимое этой папки
-   (кнопка «uploading an existing file» или GitHub Desktop).
-2. Откройте вкладку **Actions** — сборка запустится сама (~10 минут).
-3. В завершённом запуске внизу, в блоке **Artifacts**:
-   - `stillroom-android-debug-apk` — APK. Скачайте на Android-телефон и установите
-     (телефон попросит разрешить установку из этого источника).
-   - `stillroom-ios-simulator` — сборка для симулятора iPhone на Mac.
-     На настоящий iPhone так поставить нельзя (см. «iPhone» ниже).
-
-## Вариант 2. Собрать на своём компьютере
-
-Нужны Node.js 22+ и Android Studio (для iOS — Mac с Xcode и CocoaPods).
+Нужен PHP 8.2+ с расширениями pdo_sqlite, gd, fileinfo, zip (на macOS: `brew install php`).
 
 ```bash
-npm install
-npm run setup:android     # создаёт android/, иконки, заставку
-npm run android           # открывает Android Studio → кнопка Run
+cp server/.env.example server/.env
+# в server/.env: DB_DRIVER=sqlite, PUBLIC_DIR=public, APP_URL=http://127.0.0.1:8080, APP_DEBUG=true
+php server/bin/migrate.php --seed            # таблицы + перенос текущего каталога
+php server/bin/create-admin.php you@example.com
+npm run dev                                   # http://127.0.0.1:8080, админка: /admin
 ```
 
-```bash
-npm run setup:ios         # только на Mac: создаёт ios/, включает фоновое аудио
-npm run ios               # открывает Xcode → выберите iPhone → Run
-```
+## Android
 
-После любых правок в `www/index.html` выполните `npx cap sync`.
+Приложение — тот же клиент, что и сайт. Оно загружает каталог из API, поэтому новые треки появляются без пересборки.
+Адрес API задаётся переменной репозитория `STILLROOM_API_BASE` (`https://ваш-домен/api/v1`) —
+GitHub → Settings → Secrets and variables → Actions → Variables. Без неё приложение играет встроенный офлайн-каталог.
 
-## iPhone
+- `main` → релиз **latest-build** (`Stillroom.apk`), как раньше.
+- другие ветки → отдельный пре-релиз `preview-<ветка>`, `main` не затрагивается.
 
-Чтобы поставить приложение на свой iPhone, нужен Mac с Xcode. Бесплатного Apple ID хватает
-на установку на свой телефон (сборка живёт 7 дней). Для TestFlight и App Store нужен
-Apple Developer Program ($99 в год).
-
-## Фоны
-
-`www/backgrounds.js` — движок Codex без изменений сцен (сверено по md5 с финальной версией
-`c126003b…` из `Documents/Codex/2026-10-19/chatgpt-astra-x20/outputs/stillroom-backgrounds/`).
-Единственное дополнение — привязка к воспроизведению: `setFrozen(true|false)`. На паузе движение
-плавно останавливается (~2 с), при воспроизведении возвращается (~1,4 с); переходы между сценами
-идут и на паузе. Соответствие ID звука и фона — `BG_ALIAS` / `bgId()` в `www/index.html`.
-
-## Ограничения MVP
-
-- **Фоновое воспроизведение не гарантировано.** Звук генерируется внутри WebView. На iOS включён
-  фоновый режим аудио, но при блокировке экрана система может остановить звук; на Android — тоже,
-  особенно в режиме энергосбережения. Пока держите приложение открытым. Это главная задача версии 2.
-- **Шрифты грузятся из интернета.** Без сети при первом запуске будет системный шрифт.
-- **Нет управления с экрана блокировки** (обложка, кнопки) — придёт вместе с нативным плеером.
-- Иконка и заставка — временные, из логотипа сайта.
-
-## Версия 2 (следующий шаг)
-
-1. Треки из Suno как MP3 внутри приложения + нативный аудиоплеер с фоновым воспроизведением
-   и кнопками на экране блокировки. Бинауральные ритмы и частоты — нативный генератор тона.
-2. Видео-фоны из Higgsfield вместо градиентов.
-3. Подпись Android (keystore) и выкладка в Google Play, TestFlight для iOS.
-4. Избранное, история, Live Activity / виджет с таймером.
+iOS: собирается сборка для симулятора; на iPhone нужна подпись Apple (Mac + Xcode, для TestFlight — Apple Developer).

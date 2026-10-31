@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#060c11">
+<meta name="color-scheme" content="dark">
+<title>Stillroom</title>
+<!--SEO-->
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap">
+<link rel="stylesheet" href="/assets/css/app.css">
+<link rel="modulepreload" href="/assets/js/app.js">
+</head>
+<body data-route="">
+<div id="world" aria-hidden="true"></div>
+<div class="veil" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="preview-banner" id="preview-banner" hidden role="status">
+  Preview — drafts are visible only to you. <a id="preview-exit" href="/?preview=0">Exit preview</a>
+</div>
+
+<header class="topnav ui">
+  <a class="brand" data-link href="/" data-brand aria-label="Home"><span class="mark" aria-hidden="true"></span><span>stillroom</span></a>
+  <nav class="mainnav" aria-label="Main">
+    <a data-link data-nav="/" href="/">Home</a>
+    <a data-link data-nav="/browse" href="/browse">Browse</a>
+    <a data-link data-nav="/listen" href="/listen">Listening room</a>
+    <a data-link data-nav="/saved" href="/saved">Saved</a>
+  </nav>
+  <form class="top-search" role="search" data-top-search-form>
+    <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    <input type="search" placeholder="Search sounds" aria-label="Search sounds" data-top-search autocomplete="off">
+  </form>
+  <a class="icon-btn top-search-btn" data-link data-nav="/search" href="/search" aria-label="Search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></a>
+</header>
+
+<main id="view" tabindex="-1">
+  <noscript><!--SSR--><p>Turn on JavaScript to listen.</p></noscript>
+  <div class="loading" aria-live="polite"><span class="mark" aria-hidden="true"></span></div>
+</main>
+
+<aside class="playerbar ui" id="playerbar" aria-label="Player" hidden>
+  <div class="pb-now">
+    <span id="pb-art" class="pb-art"></span>
+    <div class="pb-text"><a id="pb-title" data-link href="/">—</a><span id="pb-sub"></span></div>
+    <button class="icon-btn pb-fav" data-fav-current aria-label="Save"></button>
+  </div>
+  <div class="pb-center">
+    <div class="pb-buttons">
+      <button class="icon-btn pb-repeat" id="pb-repeat" aria-label="Repeat"></button>
+      <button class="icon-btn" id="pb-prev" aria-label="Previous"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5l-9 7 9 7z" fill="currentColor" stroke="none"/><path d="M6 5v14"/></svg></button>
+      <button class="play-btn" id="pb-play" aria-label="Play"></button>
+      <button class="icon-btn" id="pb-next" aria-label="Next"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5l9 7-9 7z" fill="currentColor" stroke="none"/><path d="M18 5v14"/></svg></button>
+      <button class="icon-btn pb-queue" data-open-queue aria-label="Queue"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h12M4 11h12M4 16h7M17 14v6l4-3z"/></svg></button>
+    </div>
+    <div class="pb-progress" id="pb-progress" hidden><span id="pb-pos">0:00</span><input type="range" id="pb-seek" min="0" max="1000" value="0" aria-label="Seek"><span id="pb-dur">0:00</span></div>
+    <p class="pb-live" id="pb-live" hidden>Live sound · plays until you stop it</p>
+  </div>
+  <div class="pb-right">
+    <button class="icon-btn timer-btn" data-open-timer aria-label="Sleep timer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg><span data-timer-left></span></button>
+    <div class="pb-volume"><button class="icon-btn" id="pb-vol-ic" aria-label="Mute"></button><input type="range" id="pb-vol" min="0" max="100" aria-label="Volume"></div>
+    <button class="icon-btn" id="pb-open" aria-label="Open the listening room"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
+  </div>
+</aside>
+
+<nav class="tabbar ui" aria-label="Sections">
+  <a data-link data-nav="/" href="/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-6.5 8 6.5V20h-5.5v-5h-5v5H4z"/></svg><span>Home</span></a>
+  <a data-link data-nav="/browse" href="/browse"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span>Browse</span></a>
+  <a data-link data-nav="/listen" href="/listen" class="tab-listen"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg><span>Listen</span></a>
+  <a data-link data-nav="/search" href="/search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span>Search</span></a>
+  <a data-link data-nav="/saved" href="/saved"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><span>Saved</span></a>
+</nav>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet-panel">
+    <div class="sheet-head"><h2 id="sheet-title"></h2><button class="icon-btn" id="sheet-close" aria-label="Close"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="sheet-body" id="sheet-body"></div>
+  </div>
+</div>
+<div class="clean-tap" id="clean-tap" aria-hidden="true"></div>
+<button class="glass-btn restore" id="restore" hidden aria-label="Show interface"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 12h16M4 16h16"/></svg></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!--BOOT-->
+<script src="/assets/js/backgrounds.js"></script>
+<script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>

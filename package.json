@@ -2,14 +2,16 @@
   "name": "stillroom-app",
   "version": "0.1.0",
   "private": true,
-  "description": "Stillroom — calm music, binaural beats and frequencies. Mobile MVP built with Capacitor.",
+  "description": "Stillroom \u2014 calm music, binaural beats and frequencies. Web + Android client on one CMS.",
   "scripts": {
-    "setup:android": "cap add android && npm run assets && cap sync android",
-    "setup:ios": "cap add ios && node scripts/patch-ios.mjs && npm run assets && cap sync ios",
-    "sync": "cap sync",
+    "build:app": "node scripts/build-app.mjs",
+    "setup:android": "node scripts/build-app.mjs && cap add android && npm run assets && cap sync android",
+    "setup:ios": "node scripts/build-app.mjs && cap add ios && node scripts/patch-ios.mjs && npm run assets && cap sync ios",
+    "sync": "node scripts/build-app.mjs && cap sync",
     "android": "cap open android",
     "ios": "cap open ios",
-    "assets": "capacitor-assets generate --iconBackgroundColor \"#131419\" --iconBackgroundColorDark \"#131419\" --splashBackgroundColor \"#131419\" --splashBackgroundColorDark \"#131419\""
+    "assets": "capacitor-assets generate --iconBackgroundColor \"#131419\" --iconBackgroundColorDark \"#131419\" --splashBackgroundColor \"#131419\" --splashBackgroundColorDark \"#131419\"",
+    "dev": "php -S 127.0.0.1:8080 -t server/public server/public/index.php"
   },
   "dependencies": {
     "@capacitor/android": "^7.0.0",

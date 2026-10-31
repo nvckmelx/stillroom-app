@@ -1,0 +1,35 @@
+# Stillroom — Apache / LiteSpeed (Hostinger) rules for public_html
+Options -Indexes
+DirectoryIndex index.php
+AddDefaultCharset utf-8
+AddType application/manifest+json .webmanifest
+AddType audio/mp4 .m4a
+AddType audio/ogg .opus
+AddType image/webp .webp
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Uncomment after SSL is active on the domain to force HTTPS:
+  # RewriteCond %{HTTPS} !=on
+  # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Existing files (assets, uploads) are served directly; everything else goes to index.php
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+  RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# The page template is read by PHP, never served raw
+<Files "app.html">
+  Require all denied
+</Files>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  <FilesMatch "\.(js|css|webp|png|svg|woff2?)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+  <FilesMatch "^(sw\.js|manifest\.webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
