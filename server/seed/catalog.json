@@ -1,0 +1,748 @@
+{
+ "categories": [
+  {
+   "slug": "moods",
+   "title": "Moods",
+   "intro": "A little room to breathe",
+   "description": "Generative music for stress relief, sleep, focus and calm.",
+   "sort": 10
+  },
+  {
+   "slug": "binaural",
+   "title": "Binaural",
+   "intro": "A quieter state of mind",
+   "description": "Binaural beats tuned to brainwave bands. Use headphones.",
+   "sort": 20
+  },
+  {
+   "slug": "frequencies",
+   "title": "Frequencies",
+   "intro": "Find your own resonance",
+   "description": "Solfeggio tones and 432 Hz tuning over a soft drone.",
+   "sort": 30
+  },
+  {
+   "slug": "nature-noise",
+   "title": "Nature & noise",
+   "intro": "Closer to the natural world",
+   "description": "Rain, ocean, forest, streams and coloured noise.",
+   "sort": 40
+  }
+ ],
+ "tags": [
+  {
+   "slug": "sleep",
+   "title": "Sleep"
+  },
+  {
+   "slug": "relaxation",
+   "title": "Relaxation"
+  },
+  {
+   "slug": "meditation",
+   "title": "Meditation"
+  },
+  {
+   "slug": "focus",
+   "title": "Focus"
+  },
+  {
+   "slug": "nature",
+   "title": "Nature"
+  },
+  {
+   "slug": "binaural",
+   "title": "Binaural"
+  },
+  {
+   "slug": "solfeggio",
+   "title": "Solfeggio"
+  },
+  {
+   "slug": "432-hz",
+   "title": "432 Hz"
+  },
+  {
+   "slug": "noise",
+   "title": "Noise"
+  },
+  {
+   "slug": "headphones",
+   "title": "Headphones"
+  },
+  {
+   "slug": "piano",
+   "title": "Piano"
+  },
+  {
+   "slug": "rain",
+   "title": "Rain"
+  },
+  {
+   "slug": "ocean",
+   "title": "Ocean"
+  },
+  {
+   "slug": "morning",
+   "title": "Morning"
+  }
+ ],
+ "tracks": [
+  {
+   "slug": "stress-relief",
+   "title": "Stress relief",
+   "subtitle": "432 Hz · 6 breaths/min",
+   "details": "432 Hz tuning · one swell every 10 s",
+   "description": "Warm pads that rise and fall at six breaths a minute. Let your breathing follow the swell.",
+   "category": "moods",
+   "tags": [
+    "relaxation",
+    "432-hz"
+   ],
+   "scene": "stress-relief",
+   "engine": "stress-relief",
+   "sort": 10,
+   "featured": 0
+  },
+  {
+   "slug": "relaxation",
+   "title": "Deep relaxation",
+   "subtitle": "Lydian pads · surf",
+   "details": "432 Hz tuning · bells and distant surf",
+   "description": "Open, floating chords with slow bells and far-off waves. For unwinding after a long day.",
+   "category": "moods",
+   "tags": [
+    "relaxation",
+    "432-hz"
+   ],
+   "scene": "deep-relaxation",
+   "engine": "relaxation",
+   "sort": 20,
+   "featured": 0
+  },
+  {
+   "slug": "deep-sleep",
+   "title": "Deep sleep",
+   "subtitle": "Low drones · brown noise",
+   "details": "432 Hz tuning · 16 s chords · brown noise",
+   "description": "Dark drones that barely move, over a bed of brown noise. Set the timer and let it fade.",
+   "category": "moods",
+   "tags": [
+    "sleep",
+    "432-hz"
+   ],
+   "scene": "deep-sleep",
+   "engine": "deep-sleep",
+   "sort": 30,
+   "featured": 0
+  },
+  {
+   "slug": "anxiety-calm",
+   "title": "Anxiety calm",
+   "subtitle": "Steady · soft rain",
+   "details": "432 Hz tuning · steady rain",
+   "description": "Predictable, slow harmony with nothing sudden in it. Soft rain fills the gaps.",
+   "category": "moods",
+   "tags": [
+    "relaxation",
+    "rain"
+   ],
+   "scene": "anxiety-calm",
+   "engine": "anxiety-calm",
+   "sort": 40,
+   "featured": 0
+  },
+  {
+   "slug": "meditation",
+   "title": "Meditation",
+   "subtitle": "Drone · singing bowls",
+   "details": "D drone · a bowl every 15–30 s",
+   "description": "One steady drone and a singing bowl struck now and then. Count your breaths between strikes.",
+   "category": "moods",
+   "tags": [
+    "meditation"
+   ],
+   "scene": "meditation",
+   "engine": "meditation",
+   "sort": 50,
+   "featured": 0
+  },
+  {
+   "slug": "focus",
+   "title": "Focus",
+   "subtitle": "Slow arpeggio · pink noise",
+   "details": "440 Hz · slow arpeggio · pink noise",
+   "description": "Even, wordless motion that holds attention without pulling it. For reading and deep work.",
+   "category": "moods",
+   "tags": [
+    "focus"
+   ],
+   "scene": "focus",
+   "engine": "focus",
+   "sort": 60,
+   "featured": 0
+  },
+  {
+   "slug": "lofi",
+   "title": "Lo-fi chill",
+   "subtitle": "72 BPM · tape crackle",
+   "details": "72 BPM · seventh chords · vinyl crackle",
+   "description": "Jazzy chords, a soft muted beat and vinyl crackle. Easy background for anything.",
+   "category": "moods",
+   "tags": [
+    "focus",
+    "relaxation"
+   ],
+   "scene": "lo-fi-chill",
+   "engine": "lofi",
+   "sort": 70,
+   "featured": 0
+  },
+  {
+   "slug": "calm-piano",
+   "title": "Calm piano",
+   "subtitle": "Felt piano · space",
+   "details": "432 Hz · sparse felt piano",
+   "description": "Single notes and soft chords with plenty of room between them.",
+   "category": "moods",
+   "tags": [
+    "piano",
+    "relaxation",
+    "sleep"
+   ],
+   "scene": "calm-piano",
+   "engine": "calm-piano",
+   "sort": 80,
+   "featured": 0
+  },
+  {
+   "slug": "spa",
+   "title": "Spa & yoga",
+   "subtitle": "Water · chimes",
+   "details": "432 Hz · running water · chimes",
+   "description": "Running water, chimes and a warm open pad. Made for stretching and slow flows.",
+   "category": "moods",
+   "tags": [
+    "relaxation",
+    "meditation"
+   ],
+   "scene": "spa-yoga",
+   "engine": "spa",
+   "sort": 90,
+   "featured": 0
+  },
+  {
+   "slug": "morning",
+   "title": "Gentle morning",
+   "subtitle": "Bright pads · birds",
+   "details": "440 Hz · rising chords · birdsong",
+   "description": "Light, rising chords and a few birds outside. A soft start to the day.",
+   "category": "moods",
+   "tags": [
+    "morning"
+   ],
+   "scene": "gentle-morning",
+   "engine": "morning",
+   "sort": 100,
+   "featured": 0
+  },
+  {
+   "slug": "creative-flow",
+   "title": "Creative flow",
+   "subtitle": "Dorian · ripples",
+   "details": "440 Hz · dorian · rippling arpeggios",
+   "description": "Curious, unresolved harmony that moves just enough to keep ideas coming.",
+   "category": "moods",
+   "tags": [
+    "focus"
+   ],
+   "scene": "creative-flow",
+   "engine": "creative-flow",
+   "sort": 110,
+   "featured": 0
+  },
+  {
+   "slug": "delta",
+   "title": "Delta sleep",
+   "subtitle": "2 Hz · Delta",
+   "details": "Binaural · 2 Hz beat · 120 Hz carrier · headphones",
+   "description": "The slowest brainwave band, linked with deep, dreamless sleep. Left ear 120 Hz, right ear 122 Hz.",
+   "category": "binaural",
+   "tags": [
+    "binaural",
+    "sleep",
+    "headphones"
+   ],
+   "scene": "delta",
+   "engine": "delta",
+   "sort": 120,
+   "featured": 0
+  },
+  {
+   "slug": "theta",
+   "title": "Theta meditation",
+   "subtitle": "6 Hz · Theta",
+   "details": "Binaural · 6 Hz beat · 180 Hz carrier · headphones",
+   "description": "Linked with meditation, drowsiness and dream-like imagery. Left ear 180 Hz, right ear 186 Hz.",
+   "category": "binaural",
+   "tags": [
+    "binaural",
+    "meditation",
+    "headphones"
+   ],
+   "scene": "theta",
+   "engine": "theta",
+   "sort": 130,
+   "featured": 0
+  },
+  {
+   "slug": "alpha",
+   "title": "Alpha calm",
+   "subtitle": "10 Hz · Alpha",
+   "details": "Binaural · 10 Hz beat · 200 Hz carrier · headphones",
+   "description": "Linked with calm, relaxed wakefulness. Works best with eyes closed. Left 200 Hz, right 210 Hz.",
+   "category": "binaural",
+   "tags": [
+    "binaural",
+    "relaxation",
+    "headphones"
+   ],
+   "scene": "alpha",
+   "engine": "alpha",
+   "sort": 140,
+   "featured": 0
+  },
+  {
+   "slug": "beta",
+   "title": "Beta focus",
+   "subtitle": "16 Hz · Beta",
+   "details": "Binaural · 16 Hz beat · 220 Hz carrier · headphones",
+   "description": "Linked with alert, active concentration. Left ear 220 Hz, right ear 236 Hz.",
+   "category": "binaural",
+   "tags": [
+    "binaural",
+    "focus",
+    "headphones"
+   ],
+   "scene": "beta",
+   "engine": "beta",
+   "sort": 150,
+   "featured": 0
+  },
+  {
+   "slug": "gamma",
+   "title": "Gamma clarity",
+   "subtitle": "40 Hz · Gamma",
+   "details": "Binaural · 40 Hz beat · 250 Hz carrier · headphones",
+   "description": "The fastest band, studied for attention and memory. Left ear 250 Hz, right ear 290 Hz.",
+   "category": "binaural",
+   "tags": [
+    "binaural",
+    "focus",
+    "headphones"
+   ],
+   "scene": "gamma",
+   "engine": "gamma",
+   "sort": 160,
+   "featured": 0
+  },
+  {
+   "slug": "174hz",
+   "title": "174 Hz",
+   "subtitle": "Grounding",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "The lowest Solfeggio tone. Deep and steady, felt as much as heard.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation",
+    "sleep"
+   ],
+   "scene": "hz-174",
+   "engine": "174hz",
+   "sort": 170,
+   "featured": 0
+  },
+  {
+   "slug": "285hz",
+   "title": "285 Hz",
+   "subtitle": "Restoration",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with rest and recovery.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation",
+    "sleep"
+   ],
+   "scene": "hz-285",
+   "engine": "285hz",
+   "sort": 180,
+   "featured": 0
+  },
+  {
+   "slug": "396hz",
+   "title": "396 Hz",
+   "subtitle": "Release",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with letting go of fear and guilt.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-396",
+   "engine": "396hz",
+   "sort": 190,
+   "featured": 0
+  },
+  {
+   "slug": "417hz",
+   "title": "417 Hz",
+   "subtitle": "Change",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with clearing old patterns and starting over.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-417",
+   "engine": "417hz",
+   "sort": 200,
+   "featured": 0
+  },
+  {
+   "slug": "432hz",
+   "title": "432 Hz",
+   "subtitle": "Natural tuning",
+   "details": "Tuning · pure sine + tuned drone",
+   "description": "A pure 432 Hz tone over a pad tuned to A = 432 instead of the standard 440.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation",
+    "432-hz"
+   ],
+   "scene": "hz-432",
+   "engine": "432hz",
+   "sort": 210,
+   "featured": 0
+  },
+  {
+   "slug": "528hz",
+   "title": "528 Hz",
+   "subtitle": "Love frequency",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "The most popular Solfeggio tone, often called the love or miracle tone.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-528",
+   "engine": "528hz",
+   "sort": 220,
+   "featured": 0
+  },
+  {
+   "slug": "639hz",
+   "title": "639 Hz",
+   "subtitle": "Connection",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with relationships and harmony.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-639",
+   "engine": "639hz",
+   "sort": 230,
+   "featured": 0
+  },
+  {
+   "slug": "741hz",
+   "title": "741 Hz",
+   "subtitle": "Clarity",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with expression and a clear mind.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-741",
+   "engine": "741hz",
+   "sort": 240,
+   "featured": 0
+  },
+  {
+   "slug": "852hz",
+   "title": "852 Hz",
+   "subtitle": "Intuition",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "Traditionally linked with inner calm and awareness.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-852",
+   "engine": "852hz",
+   "sort": 250,
+   "featured": 0
+  },
+  {
+   "slug": "963hz",
+   "title": "963 Hz",
+   "subtitle": "Awareness",
+   "details": "Solfeggio · pure sine + tuned drone",
+   "description": "The highest Solfeggio tone, traditionally linked with a sense of oneness.",
+   "category": "frequencies",
+   "tags": [
+    "solfeggio",
+    "meditation"
+   ],
+   "scene": "hz-963",
+   "engine": "963hz",
+   "sort": 260,
+   "featured": 0
+  },
+  {
+   "slug": "rain",
+   "title": "Rain",
+   "subtitle": "Window rain",
+   "details": "Filtered noise · no music",
+   "description": "Steady rain on a window. Masks voices and street noise.",
+   "category": "nature-noise",
+   "tags": [
+    "nature",
+    "rain",
+    "sleep"
+   ],
+   "scene": "rain",
+   "engine": "rain",
+   "sort": 270,
+   "featured": 0
+  },
+  {
+   "slug": "ocean",
+   "title": "Ocean waves",
+   "subtitle": "One wave / 14 s",
+   "details": "Surf · about one wave every 14 seconds",
+   "description": "Slow surf rolling in and drawing back. Easy to breathe along with.",
+   "category": "nature-noise",
+   "tags": [
+    "nature",
+    "ocean",
+    "sleep"
+   ],
+   "scene": "ocean",
+   "engine": "ocean",
+   "sort": 280,
+   "featured": 0
+  },
+  {
+   "slug": "forest-night",
+   "title": "Forest night",
+   "subtitle": "Crickets · breeze",
+   "details": "Crickets · light breeze",
+   "description": "Crickets, a light breeze through the trees and nothing else.",
+   "category": "nature-noise",
+   "tags": [
+    "nature",
+    "sleep"
+   ],
+   "scene": "forest",
+   "engine": "forest-night",
+   "sort": 290,
+   "featured": 0
+  },
+  {
+   "slug": "stream",
+   "title": "Mountain stream",
+   "subtitle": "Running water",
+   "details": "Running water",
+   "description": "A shallow stream over stones. Bright, constant and soothing.",
+   "category": "nature-noise",
+   "tags": [
+    "nature",
+    "focus"
+   ],
+   "scene": "stream",
+   "engine": "stream",
+   "sort": 300,
+   "featured": 0
+  },
+  {
+   "slug": "brown-noise",
+   "title": "Brown noise",
+   "subtitle": "Deep rumble",
+   "details": "Noise · energy falls 6 dB per octave",
+   "description": "A deep, soft rumble with most of its energy in the bass. Popular for sleep and blocking low traffic hum.",
+   "category": "nature-noise",
+   "tags": [
+    "noise",
+    "sleep"
+   ],
+   "scene": "brown-noise",
+   "engine": "brown-noise",
+   "sort": 310,
+   "featured": 0
+  },
+  {
+   "slug": "pink-noise",
+   "title": "Pink noise",
+   "subtitle": "Balanced",
+   "details": "Noise · equal energy per octave",
+   "description": "Balanced like steady rain. Each octave carries the same energy.",
+   "category": "nature-noise",
+   "tags": [
+    "noise",
+    "sleep",
+    "focus"
+   ],
+   "scene": "pink-noise",
+   "engine": "pink-noise",
+   "sort": 320,
+   "featured": 0
+  },
+  {
+   "slug": "white-noise",
+   "title": "White noise",
+   "subtitle": "Flat hiss",
+   "details": "Noise · flat across all frequencies",
+   "description": "An even hiss across every frequency. The strongest masker for loud rooms.",
+   "category": "nature-noise",
+   "tags": [
+    "noise",
+    "focus"
+   ],
+   "scene": "white-noise",
+   "engine": "white-noise",
+   "sort": 330,
+   "featured": 0
+  }
+ ],
+ "collections": [
+  {
+   "slug": "fall-asleep",
+   "title": "Fall asleep",
+   "description": "Slow, dark and steady. Put on the timer and let it fade.",
+   "tracks": [
+    "deep-sleep",
+    "delta",
+    "brown-noise",
+    "rain",
+    "ocean",
+    "calm-piano",
+    "174hz",
+    "forest-night"
+   ]
+  },
+  {
+   "slug": "unwind",
+   "title": "Unwind",
+   "description": "For the end of a long day: warm pads, slow waves, nothing sudden.",
+   "tracks": [
+    "stress-relief",
+    "relaxation",
+    "anxiety-calm",
+    "spa",
+    "alpha",
+    "ocean"
+   ]
+  },
+  {
+   "slug": "meditate",
+   "title": "Meditate",
+   "description": "Drones, bowls, theta beats and pure tones to sit with.",
+   "tracks": [
+    "meditation",
+    "theta",
+    "528hz",
+    "432hz",
+    "963hz",
+    "spa"
+   ]
+  },
+  {
+   "slug": "deep-focus",
+   "title": "Deep focus",
+   "description": "Even, wordless sound that holds attention without pulling it.",
+   "tracks": [
+    "focus",
+    "beta",
+    "gamma",
+    "lofi",
+    "creative-flow",
+    "pink-noise",
+    "white-noise",
+    "stream"
+   ]
+  },
+  {
+   "slug": "nature-sounds",
+   "title": "Nature sounds",
+   "description": "Rain, surf, forest at night and running water.",
+   "tracks": [
+    "rain",
+    "ocean",
+    "forest-night",
+    "stream",
+    "morning"
+   ]
+  }
+ ],
+ "settings": {
+  "site": {
+   "name": "Stillroom",
+   "tagline": "Calm music, binaural beats and frequencies",
+   "logo": null,
+   "links": [],
+   "footer": "Binaural beats need headphones. For relaxation, not medical treatment.",
+   "seo": {
+    "title": "Stillroom — calm music for sleep, focus and relaxation",
+    "description": "Generative calm music, binaural beats, Solfeggio frequencies and nature sounds with living backgrounds. Free to listen in the browser and on Android.",
+    "image": null
+   }
+  },
+  "home": {
+   "hero_eyebrow": "33 worlds. One quiet place.",
+   "hero_title": "A quiet room for your mind",
+   "hero_subtitle": "Music for sleep, relaxation, meditation and focus — with a living background for every sound.",
+   "cta_label": "Start listening",
+   "cta_track": "stress-relief",
+   "sections": [
+    {
+     "type": "collection",
+     "slug": "fall-asleep"
+    },
+    {
+     "type": "categories"
+    },
+    {
+     "type": "collection",
+     "slug": "unwind"
+    },
+    {
+     "type": "collection",
+     "slug": "deep-focus"
+    },
+    {
+     "type": "collection",
+     "slug": "meditate"
+    },
+    {
+     "type": "collection",
+     "slug": "nature-sounds"
+    },
+    {
+     "type": "new",
+     "title": "All sounds"
+    }
+   ]
+  }
+ }
+}
